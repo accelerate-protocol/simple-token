@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "hardhat test",
+    "test:coverage": "hardhat test --coverage",
+    "test:gas": "REPORT_GAS=true hardhat test",
     "ignition:deploy": "hardhat ignition deploy ./ignition/modules/GGTToken.ts"
   },
   "repository": {

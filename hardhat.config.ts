@@ -69,4 +69,18 @@ export default defineConfig({
       bscTestnet: process.env.ETHERSCAN_API_KEY || ""
     }
   },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    showTimeSpent: true,
+    onlyCalledMethods: false,
+  },
+  coverage: {
+    exclude: [
+      "contracts/mocks/**",
+      "contracts/interfaces/**",
+      "ignition/**"
+    ]
+  }
 });
