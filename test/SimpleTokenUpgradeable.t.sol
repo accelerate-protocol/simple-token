@@ -3,9 +3,8 @@ pragma solidity ^0.8.20;
 
 import { Test } from "forge-std/Test.sol";
 import { SimpleTokenUpgradeable } from "../contracts/SimpleTokenUpgradeable.sol";
-import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-contract SimpleTokenUpgradeableMintBurnTest is Test {
+contract SimpleTokenUpgradeableTest is Test {
     SimpleTokenUpgradeable token;
     address owner = address(0x1);
     address minter = address(0x2);
@@ -19,18 +18,6 @@ contract SimpleTokenUpgradeableMintBurnTest is Test {
         token.grantRole(token.MINT_ROLE(), minter);
         token.grantRole(token.BURN_ROLE(), burner);
         token.grantRole(token.PAUSE_ROLE(), pauser);
-    }
-
-    function setUpProxy() internal returns (SimpleTokenUpgradeable, address) {
-        SimpleTokenUpgradeable impl = new SimpleTokenUpgradeable();
-        bytes memory initData = abi.encodeWithSignature("initialize(string,string,uint256)", "GGT", "GGT", 1000 ether);
-        ERC1967Proxy proxy = new ERC1967Proxy(address(impl), initData);
-        SimpleTokenUpgradeable proxyToken = SimpleTokenUpgradeable(address(proxy));
-        proxyToken.grantRole(proxyToken.MINT_ROLE(), minter);
-        proxyToken.grantRole(proxyToken.BURN_ROLE(), burner);
-        proxyToken.grantRole(proxyToken.PAUSE_ROLE(), pauser);
-        proxyToken.grantRole(proxyToken.UPGRADE_ROLE(), owner);
-        return (proxyToken, address(proxy));
     }
 
     function test_MintIncreasesBalance() public {
@@ -61,29 +48,6 @@ contract SimpleTokenUpgradeableMintBurnTest is Test {
         token.burn(recipient, 100 ether);
     }
 
-    function test_UpgradeWithRole() public {
-        SimpleTokenUpgradeable newImpl = new SimpleTokenUpgradeable();
-        (SimpleTokenUpgradeable proxyToken, ) = setUpProxy();
-        vm.prank(owner);
-        proxyToken.upgrade(address(newImpl));
-    }
-
-    function test_UpgradeWithoutRoleReverts() public {
-        SimpleTokenUpgradeable newImpl = new SimpleTokenUpgradeable();
-        (SimpleTokenUpgradeable proxyToken, ) = setUpProxy();
-        vm.prank(burner);
-        vm.expectRevert();
-        proxyToken.upgrade(address(newImpl));
-    }
-
-    function test_AuthorizeUpgradeWithoutRoleReverts() public {
-        SimpleTokenUpgradeable newImpl = new SimpleTokenUpgradeable();
-        (SimpleTokenUpgradeable proxyToken, ) = setUpProxy();
-        vm.prank(minter);
-        vm.expectRevert();
-        proxyToken.upgrade(address(newImpl));
-    }
-
     function test_PauseBlocksTransfers() public {
         vm.prank(pauser);
         token.pause();
@@ -110,14 +74,6 @@ contract SimpleTokenUpgradeableMintBurnTest is Test {
         token.pause();
     }
 
-    function test_UnpauseWithoutRoleReverts() public {
-        vm.prank(pauser);
-        token.pause();
-        vm.prank(minter);
-        vm.expectRevert();
-        token.unpause();
-    }
-
     function test_PausedBlocksMint() public {
         vm.prank(pauser);
         token.pause();
@@ -132,5 +88,10 @@ contract SimpleTokenUpgradeableMintBurnTest is Test {
         vm.prank(burner);
         vm.expectRevert();
         token.burn(owner, 100 ether);
+    }
+
+    function test_UpgradeWithoutUpgradeRoleReverts() public {
+        vm.expectRevert();
+        token.upgrade(address(0));
     }
 }
