@@ -24,7 +24,7 @@ hardhat.config.ts
 | bscMainnet | http | 56 |
 | localhost | http | 31337 |
 
-Environment variables (see `.env`): `BASEMAIN_PRIVATE_KEY`, `BASETEST_PRIVATE_KEY`, `BSCTEST_PRIVATE_KEY`, `BSCMAIN_PRIVATE_KEY`, `ETHERSCAN_API_KEY`, `COINMARKETCAP_API_KEY`.
+Environment variables (see `.env` and `.env.example`): `BASEMAIN_PRIVATE_KEY`, `BASETEST_PRIVATE_KEY`, `BSCTEST_PRIVATE_KEY`, `BSCMAIN_PRIVATE_KEY`, `ETHERSCAN_API_KEY`, `COINMARKETCAP_API_KEY`.
 
 ## Commands
 
