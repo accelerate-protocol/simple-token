@@ -1,6 +1,9 @@
 import hardhatToolboxViemPlugin from "@nomicfoundation/hardhat-toolbox-viem";
 import hardhatIgnitionPlugin from "@nomicfoundation/hardhat-ignition";
 import { configVariable, defineConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-verify";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 export default defineConfig({
   plugins: [hardhatToolboxViemPlugin, hardhatIgnitionPlugin],
@@ -29,15 +32,41 @@ export default defineConfig({
       type: "edr-simulated",
       chainType: "op",
     },
-    sepolia: {
+    baseMainnet: {
       type: "http",
-      chainType: "l1",
-      url: configVariable("SEPOLIA_RPC_URL"),
-      accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
+      url: "https://mainnet.base.org",
+      accounts: process.env.BASEMAIN_PRIVATE_KEY ? [process.env.BASEMAIN_PRIVATE_KEY] : [],
+      chainId: 8453
     },
+    baseSepolia: {
+      type: "http",
+      url: "https://sepolia.base.org",
+      accounts: process.env.BASETEST_PRIVATE_KEY ? [process.env.BASETEST_PRIVATE_KEY] : [],
+      chainId: 84532
+    },
+    bscTestnet: {
+      // BSC Testnet RPC
+      type: "http",
+      url: "https://bsc-testnet.bnbchain.org",
+      accounts: process.env.BSCTEST_PRIVATE_KEY ? [process.env.BSCTEST_PRIVATE_KEY] : [],
+      chainId: 97
+    },
+    bscMainnet:{
+      type: "http",
+      url: "https://bsc-dataseed.bnbchain.org",
+      accounts: process.env.BSCMAIN_PRIVATE_KEY ? [process.env.BSCMAIN_PRIVATE_KEY] : [],
+      chainId: 56
+    },
+
     localhost: {
       type: "http",
       url: "http://127.0.0.1:8545",
-    },
+    }
+  },
+  etherscan: {
+    apiKey: {
+      bsc: process.env.ETHERSCAN_API_KEY || "",
+      bscTestnet: process.env.ETHERSCAN_API_KEY || ""
+    }
   },
 });
