@@ -9,8 +9,8 @@ To learn more about Hardhat 3, please visit the [Getting Started guide](https://
 This example project includes:
 
 - A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using [`node:test`](nodejs.org/api/test.html), the new Node.js native test runner, and [`viem`](https://viem.sh/).
+- Foundry-compatible Solidity unit tests (`test/*.t.sol`).
+- TypeScript integration via `viem` (scripts / Ignition).
 - Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
 
 ## Usage
@@ -27,7 +27,6 @@ You can also selectively run the Solidity or `node:test` tests:
 
 ```shell
 npx hardhat test solidity
-npx hardhat test nodejs
 ```
 
 ### Test Coverage
@@ -71,19 +70,18 @@ npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --network localhost
 
 This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `BSCTEST_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
+To run the deployment to Sepolia, you need an account with funds to send the transaction. The `bscTestnet` network uses `BSCTEST_PRIVATE_KEY`. To deploy to `baseSepolia` set `BASETEST_PRIVATE_KEY`.
 
-You can set the `BSCTEST_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
+You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
 
-To set the `BSCTEST_PRIVATE_KEY` config variable using `hardhat-keystore`:
+To set the `BASETEST_PRIVATE_KEY` config variable using `hardhat-keystore`:
 
 ```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+npx hardhat keystore set BASETEST_PRIVATE_KEY
 ```
 
 After setting the variable, you can run the deployment with the Sepolia network:
 
 ```shell
-
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+npx hardhat ignition deploy --network baseSepolia ignition/modules/GGTToken.ts
 ```
