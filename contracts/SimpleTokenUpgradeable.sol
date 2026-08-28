@@ -2,20 +2,22 @@
 pragma solidity ^0.8.34;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /// @title Simple Token Upgradeable
 /// @author AXC Labs
 /// @notice Upgradeable ERC20 token with role-based access control
-contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Upgradeable, AccessControlUpgradeable {
+contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20PausableUpgradeable, AccessControlUpgradeable {
     /// @notice Mint role identifier
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
     /// @notice Burn role identifier
     bytes32 public constant BURN_ROLE = keccak256("BURN_ROLE");
     /// @notice Upgrade role identifier
     bytes32 public constant UPGRADE_ROLE = keccak256("UPGRADE_ROLE");
+    /// @notice Pause role identifier
+    bytes32 public constant PAUSE_ROLE = keccak256("PAUSE_ROLE");
 
     /// @notice Initialize the token
     /// @param name_ Token name
@@ -23,9 +25,11 @@ contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Upgradea
     /// @param initialSupply_ Initial supply
     function initialize(string memory name_, string memory symbol_, uint256 initialSupply_) public initializer {
         __ERC20_init(name_, symbol_);
+        __ERC20Pausable_init();
         __AccessControl_init();
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(UPGRADE_ROLE, msg.sender);
+        _grantRole(PAUSE_ROLE, msg.sender);
         _mint(msg.sender, initialSupply_);
     }
 
@@ -49,8 +53,17 @@ contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Upgradea
         upgradeToAndCall(newImplementation, "");
     }
 
-    /// @notice Authorize upgrade
-    /// @param newImplementation New implementation address
-    // solhint-disable-next-line no-empty-blocks
-    function _authorizeUpgrade(address newImplementation) internal override onlyRole(UPGRADE_ROLE) {}
+// solhint-disable-next-line no-empty-blocks
+    function _authorizeUpgrade(address) internal override onlyRole(UPGRADE_ROLE) {
+    }
+
+    /// @notice Pause token transfers
+    function pause() external onlyRole(PAUSE_ROLE) {
+        _pause();
+    }
+
+    /// @notice Unpause token transfers
+    function unpause() external onlyRole(PAUSE_ROLE) {
+        _unpause();
+    }
 }
