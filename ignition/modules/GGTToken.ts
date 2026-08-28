@@ -1,15 +1,10 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, parseAbi } from "viem";
+import ERC1967ProxyArtifact from "@openzeppelin/contracts/build/contracts/ERC1967Proxy.json";
 
 export default buildModule("GGTTokenModule", (m) => {
-  // 1. Implementation contract
-  const ggt = m.contract("GGTTokenUpgradeable", [
-    "GGT Token",
-    "GGT",
-    1_000_000n * 10n ** 6n,
-  ]);
+  const ggt = m.contract("GGTTokenUpgradeable");
 
-  // 2. UUPS proxy pointing at the implementation, initialized on deploy
   const initData = encodeFunctionData({
     abi: parseAbi([
       "function initialize(string name_, string symbol_, uint256 initialSupply_)",
@@ -18,16 +13,13 @@ export default buildModule("GGTTokenModule", (m) => {
     args: ["GGT Token", "GGT", 1_000_000n * 10n ** 6n],
   });
 
-  const proxy = m.contractAt(
-    "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol:ERC1967Proxy",
-    m.encodeData(
-      m.call("lexer", "allocate", [ggt.address, initData]),
-    ),
-  );
+  const proxyAdminOwner = m.getAccount(0);
+  const proxy = m.contract("ERC1967Proxy",
+  ERC1967ProxyArtifact,
+  [
+    ggt,
+    initData,
+  ]);
 
-  return { proxy };
+  return { proxy, ggt };
 });
-
-function parseAbi(abi: any) {
-  return abi as any;
-}
