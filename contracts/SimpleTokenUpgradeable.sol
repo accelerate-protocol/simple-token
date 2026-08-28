@@ -6,7 +6,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract GGTTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Upgradeable, AccessControlUpgradeable {
+contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Upgradeable, AccessControlUpgradeable {
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
     bytes32 public constant BURN_ROLE = keccak256("BURN_ROLE");
     bytes32 public constant UPGRADE_ROLE = keccak256("UPGRADE_ROLE");

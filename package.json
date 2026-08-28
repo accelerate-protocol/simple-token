@@ -6,7 +6,7 @@
   "scripts": {
     "test": "hardhat test",
     "test:coverage": "hardhat test --coverage",
-    "test:gas": "REPORT_GAS=true hardhat test",
+    "test:gas": "hardhat test --gas-stats",
     "ignition:deploy": "hardhat ignition deploy ./ignition/modules/GGTToken.ts"
   },
   "repository": {

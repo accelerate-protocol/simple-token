@@ -30,6 +30,38 @@ npx hardhat test solidity
 npx hardhat test nodejs
 ```
 
+### Test Coverage
+
+To run tests with coverage report:
+
+```shell
+npx hardhat test --coverage
+```
+
+Or use the npm script:
+
+```shell
+npm run test:coverage
+```
+
+Coverage results are generated in the `coverage/` directory. Open `coverage/html/index.html` in a browser to view the detailed line-by-line coverage report.
+
+### Gas Reporting
+
+To run tests with gas report, set the `REPORT_GAS` environment variable:
+
+```shell
+npx hardhat test --gas-stats
+```
+
+Or use the npm script:
+
+```shell
+npm run test:gas
+```
+
+The gas report will be displayed in the terminal output.
+
 ### Make a deployment to localhost
 
 ```shell
