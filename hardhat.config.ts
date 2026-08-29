@@ -63,11 +63,10 @@ export default defineConfig({
       url: "http://127.0.0.1:8545",
     }
   },
-  etherscan: {
-    apiKey: {
-      bsc: process.env.ETHERSCAN_API_KEY || "",
-      bscTestnet: process.env.ETHERSCAN_API_KEY || ""
-    }
+  verify: {
+    etherscan: {
+      apiKey: configVariable("ETHERSCAN_API_KEY"),
+    },
   },
   gasReporter: {
     enabled: true,
