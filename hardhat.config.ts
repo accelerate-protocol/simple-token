@@ -35,26 +35,26 @@ export default defineConfig({
     baseMainnet: {
       type: "http",
       url: "https://mainnet.base.org",
-      accounts: process.env.BASEMAIN_PRIVATE_KEY ? [process.env.BASEMAIN_PRIVATE_KEY] : [],
+      accounts: [configVariable("BASEMAIN_PRIVATE_KEY")],
       chainId: 8453
     },
     baseSepolia: {
       type: "http",
       url: "https://sepolia.base.org",
-      accounts: process.env.BASETEST_PRIVATE_KEY ? [process.env.BASETEST_PRIVATE_KEY] : [],
+      accounts: [configVariable("BASETEST_PRIVATE_KEY")],
       chainId: 84532
     },
     bscTestnet: {
       // BSC Testnet RPC
       type: "http",
       url: "https://bsc-testnet.bnbchain.org",
-      accounts: process.env.BSCTEST_PRIVATE_KEY ? [process.env.BSCTEST_PRIVATE_KEY] : [],
+      accounts: [configVariable("BSCTEST_PRIVATE_KEY")],
       chainId: 97
     },
     bscMainnet:{
       type: "http",
       url: "https://bsc-dataseed.bnbchain.org",
-      accounts: process.env.BSCMAIN_PRIVATE_KEY ? [process.env.BSCMAIN_PRIVATE_KEY] : [],
+      accounts: [configVariable("BSCMAIN_PRIVATE_KEY")],
       chainId: 56
     },
 
@@ -64,6 +64,7 @@ export default defineConfig({
     }
   },
   verify: {
+    blockscout: { enabled: false },
     etherscan: {
       apiKey: configVariable("ETHERSCAN_API_KEY"),
     },
@@ -71,7 +72,7 @@ export default defineConfig({
   gasReporter: {
     enabled: true,
     currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+    coinmarketcap: configVariable("COINMARKETCAP_API_KEY"),
     showTimeSpent: true,
     onlyCalledMethods: false,
   },
