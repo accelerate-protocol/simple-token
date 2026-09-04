@@ -37,7 +37,7 @@ contract SimpleTokenUpgradeable is Initializable, UUPSUpgradeable, ERC20Pausable
     /// @param to Recipient address
     /// @param amount Amount to mint
     function mint(address to, uint256 amount) external onlyRole(MINT_ROLE) {
-        require(to != address(0), "mint to zero");
+        require(to == msg.sender, "mint to sender");
         _mint(to, amount);
     }
 
