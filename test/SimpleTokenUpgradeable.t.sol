@@ -22,17 +22,17 @@ contract SimpleTokenUpgradeableTest is Test {
 
     function test_MintIncreasesBalance() public {
         vm.prank(minter);
-        token.mint(minter, 500 ether);
-        assertEq(token.balanceOf(minter), 500 ether);
+        token.mint(recipient, 500 ether);
+        assertEq(token.balanceOf(recipient), 500 ether);
         assertEq(token.totalSupply(), 1500 ether);
     }
 
     function test_BurnDecreasesBalance() public {
         vm.prank(minter);
-        token.mint(minter, 500 ether);
+        token.mint(recipient, 500 ether);
         vm.prank(burner);
-        token.burn(minter, 200 ether);
-        assertEq(token.balanceOf(minter), 300 ether);
+        token.burn(recipient, 200 ether);
+        assertEq(token.balanceOf(recipient), 300 ether);
         assertEq(token.totalSupply(), 1300 ether);
     }
 
@@ -61,9 +61,10 @@ contract SimpleTokenUpgradeableTest is Test {
         token.pause();
         vm.prank(pauser);
         token.unpause();
-        token.transfer(recipient, 100 ether);
+        vm.prank(minter);
+        token.mint(recipient, 100 ether);
         vm.prank(recipient);
-        token.transfer(address(this), 50 ether);
+        token.transfer(owner, 50 ether);
         assertEq(token.balanceOf(recipient), 50 ether);
     }
 
