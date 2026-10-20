@@ -45,14 +45,20 @@ npm run test:coverage
 npm run test:gas
 
 # Deploy locally
+```
 npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --network localhost
+npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --deployment-id GGTToken  --network localhost
+```
 
 # Deploy to baseSepolia
-npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --network baseSepolia
+```
+npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --deployment-id GGTToken --network baseSepolia
+```
 
 # Deploy to bscTestnet
-npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --network bscTestnet
+```
+npx hardhat ignition deploy ./ignition/modules/GGTToken.ts --deployment-id GGTToken --network bscTestnet
+```
 
 # Run scripts
 npx hardhat run scripts/grant-roles.ts --network <network>
@@ -62,3 +68,12 @@ npx hardhat run scripts/mint-burn.ts --network <network>
 ## Contract
 
 `SimpleTokenUpgradeable` — UUPS upgradeable, ERC20Pausable, AccessControl. Roles: `DEFAULT_ADMIN_ROLE`, `MINT_ROLE`, `BURN_ROLE`, `UPGRADE_ROLE`, `PAUSE_ROLE`. Initialize with name, symbol, initialSupply.
+
+## Notes
+
+The contract takes bytecode from OpenZeppelin to deploy ERC1967 proxy.
+This code is already verified on BSCMainnet, but not on BSCTestnet.
+BSCMainnet will should the verified contract.  BSCTestnet will allow
+you to link from the proxy to the implementation but the proxy
+contract source will not appear.
+
